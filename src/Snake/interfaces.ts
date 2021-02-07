@@ -4,6 +4,7 @@ export interface ISnakeSegment {
 }
 
 export interface ISnake {
+    head: ISnakeSegment;
     segments: ISnakeSegment[];
 }
 
