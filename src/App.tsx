@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react';
 import { Playground } from './Playground';
 import { Snake, ISnake, ISnakeSegment } from './Snake';
 import { Food } from './Food';
-import { 
-    useRandomInteger, 
-    useGamePad, 
+import {
+    useRandomInteger,
+    useGamePad,
     Direction,
     useTicker
 } from './common/hooks';
@@ -16,49 +16,76 @@ export const App = () => {
     const { ticks } = useTicker(200);
     const [integerGenerator] = useRandomInteger(1, 98);
 
-    const [snakeState, setSnakeState] = useState<ISnake>({
-        head: { x: 2, y: 0 },
-        segments:[
-            { x: 0, y: 0 },
-            { x: 2, y: 0 }
-        ]
-    });
+    const [snake, setSnake] = useState<ISnake>((() => {
+        const head = { x: 2, y: 0 };
+        return {
+            head,
+            segments: [
+                { x: 0, y: 0 },
+                head
+            ]
+        }
+    }));
 
-    const [foodState] = useState<{x: number, y: number}>({
+    const [food, setFood] = useState<{ x: number, y: number }>({
         x: integerGenerator(),
         y: integerGenerator(),
     });
 
-    const moveSnake = () => {
-        let segments = [...snakeState.segments];
+    const [speed, setSpeed] = useState(200);
+
+    useEffect(() => {
+        console.log('check conditions');
+
+        if (isBorderHit()) {
+            return gameOver();
+        }
+
+        if (isSelfHit()) {
+            return gameOver();
+        }
+
+        if (canEatFood()) {
+            eatFood();
+            increaseSpeed();
+        }
+    })
+
+    useEffect(() => {
+        console.log('ticks changed');
+        moveSnake();
+    }, [ticks])
+
+    function moveSnake() {
+        let segments = [...snake.segments];
         let head: ISnakeSegment;
 
-        switch(direction) {
+        switch (direction) {
             case Direction.Top: {
-                head = { 
-                    x: snakeState.head.x,
-                    y: snakeState.head.y - 2
+                head = {
+                    x: snake.head.x,
+                    y: snake.head.y - 2
                 };
                 break;
             }
             case Direction.Left: {
-                head = { 
-                    x: snakeState.head.x - 2,
-                    y: snakeState.head.y
+                head = {
+                    x: snake.head.x - 2,
+                    y: snake.head.y
                 };
                 break;
             }
             case Direction.Right: {
-                head = { 
-                    x: snakeState.head.x + 2,
-                    y: snakeState.head.y
+                head = {
+                    x: snake.head.x + 2,
+                    y: snake.head.y
                 };
                 break;
             }
             case Direction.Bottom: {
-                head = { 
-                    x: snakeState.head.x,
-                    y: snakeState.head.y + 2
+                head = {
+                    x: snake.head.x,
+                    y: snake.head.y + 2
                 };
                 break;
             }
@@ -69,21 +96,77 @@ export const App = () => {
         // cut tail
         segments.shift();
 
-        setSnakeState({
+        setSnake({
             head,
             segments,
         });
     }
 
-    useEffect(() => {
-        console.log('ticks changed');
-        moveSnake();
-    }, [ticks])
-    
+    function eatFood() {
+        growSnake();
+        generateOneMoreFood();
+    }
+
+    function growSnake() {
+        const tail = snake.segments[0];
+
+        setSnake({
+            ...snake,
+            segments: [{ ...tail }, ...snake.segments]
+        })
+    }
+
+    function generateOneMoreFood() {
+        setFood({
+            x: integerGenerator(),
+            y: integerGenerator(),
+        })
+    }
+
+    function increaseSpeed() {
+        if (speed > 20) {
+            setSpeed(speed - 10);
+        }
+    }
+
+    function canEatFood() {
+        const { head } = snake;
+
+        console.log(`head ${head.x} - ${head.y}; food${food.x} - ${food.y}`);
+
+        return head.x === food.x && head.y === food.y;
+    }
+
+    function isBorderHit() {
+        const { head } = snake;
+
+        if (head.x >= 100 || head.x < 0 || head.y >= 100 || head.y < 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function isSelfHit() {
+        const { head, segments } = snake;
+
+        return segments.some(segment => {
+            if (segment !== head) {
+                return segment.x === head.x && segment.y === head.y
+            } else {
+                return false;
+            }
+        });
+    }
+
+    function gameOver() {
+        alert('GAME OVER!!!');
+    }
+
     return (
         <Playground>
-            <Snake snake={snakeState} />
-            <Food position={foodState} />
+            <Snake snake={snake} />
+            <Food food={food} />
         </Playground>
     );
 }

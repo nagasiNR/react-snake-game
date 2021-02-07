@@ -1,5 +1,5 @@
 export interface IFoodProps {
-    position: {
+    food: {
         x: number;
         y: number;
     }

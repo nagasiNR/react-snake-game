@@ -3,10 +3,10 @@ import { FunctionComponent } from 'react';
 import { IFoodProps } from './interfaces';
 import './Food.scss';
 
-export const Food: FunctionComponent<IFoodProps> = ({ position }) => {
+export const Food: FunctionComponent<IFoodProps> = ({ food }) => {
     const styles = {
-        left: `${position.x}%`,
-        top: `${position.y}%`,
+        left: `${food.x}%`,
+        top: `${food.y}%`,
     }
 
     return (
