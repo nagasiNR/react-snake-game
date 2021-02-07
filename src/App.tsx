@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Playground } from './Playground';
 import { Snake, ISnake, ISnakeSegment } from './Snake';
 import { Food } from './Food';
+import { GameResults } from './GameResults';
 import {
     useRandomInteger,
     useGamePad,
@@ -15,6 +16,7 @@ export const App = () => {
     const [direction] = useGamePad(Direction.Right);
     const { ticks } = useTicker(200);
     const [integerGenerator] = useRandomInteger(1, 98);
+    const [score, setScore] = useState(0);
 
     const [snake, setSnake] = useState<ISnake>((() => {
         const head = { x: 2, y: 0 };
@@ -49,10 +51,11 @@ export const App = () => {
             eatFood();
             increaseSpeed();
         }
-    })
+    }, [snake])
 
     useEffect(() => {
         console.log('ticks changed');
+
         moveSnake();
     }, [ticks])
 
@@ -105,6 +108,7 @@ export const App = () => {
     function eatFood() {
         growSnake();
         generateOneMoreFood();
+        increaseScore();
     }
 
     function growSnake() {
@@ -129,10 +133,12 @@ export const App = () => {
         }
     }
 
+    function increaseScore() {
+        setScore(score + 1);
+    }
+
     function canEatFood() {
         const { head } = snake;
-
-        console.log(`head ${head.x} - ${head.y}; food${food.x} - ${food.y}`);
 
         return head.x === food.x && head.y === food.y;
     }
@@ -160,13 +166,16 @@ export const App = () => {
     }
 
     function gameOver() {
-        alert('GAME OVER!!!');
+        // alert('GAME OVER!!!');
     }
 
     return (
-        <Playground>
-            <Snake snake={snake} />
-            <Food food={food} />
-        </Playground>
+        <div className="game-wrapper">
+            <GameResults score={score} />
+            <Playground>
+                <Snake snake={snake} />
+                <Food food={food} />
+            </Playground>
+        </div>
     );
 }
