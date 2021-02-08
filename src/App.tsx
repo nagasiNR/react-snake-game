@@ -32,6 +32,10 @@ export const App = () => {
     );
 
     useEffect(() => {
+        moveSnake();
+    }, [ticks])
+
+    useEffect(() => {
         if (isBorderHit()) {
             return gameOver();
         }
@@ -46,13 +50,9 @@ export const App = () => {
         }
     }, [snake])
 
-    useEffect(() => {
-        moveSnake();
-    }, [ticks])
-
     function moveSnake() {
         let segments = [...snake.segments];
-        let head: ISnakeSegment;
+        let head: ISnakeSegment | null = null;
 
         switch (direction) {
             case Direction.Top: {
@@ -85,15 +85,17 @@ export const App = () => {
             }
         }
 
-        // change head direction
-        segments.push(head);
-        // cut tail
-        segments.shift();
+        if (head !== null) {
+            // change head direction
+            segments.push(head);
+            // cut tail
+            segments.shift();
 
-        setSnake({
-            head,
-            segments,
-        });
+            setSnake({
+                head,
+                segments,
+            });
+        }
     }
 
     function eatFood() {
