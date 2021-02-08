@@ -2,7 +2,7 @@ import { ISnake } from '../Snake';
 import { IFood } from '../Food';
 
 export const getDefaultSnake = (): ISnake => {
-    const head = { x: 2, y: 0 };
+    const head = { x: 4, y: 0 };
 
     return {
         head,
@@ -14,12 +14,12 @@ export const getDefaultSnake = (): ISnake => {
 }
 
 export const generateFood = (): IFood => ({
-    x: getRandomInteger(1, 98),
-    y: getRandomInteger(1, 98),
+    x: getRandomInteger(3, 96),
+    y: getRandomInteger(3, 96),
 });
 
 const getRandomInteger = (from: number, to: number) => {
     const min = Math.ceil(from);
     const max = Math.floor(to);
-    return Math.floor((Math.random() * (max - min + 1) + min) / 2) * 2;
+    return Math.floor((Math.random() * (max - min + 1) + min) / 4) * 4;
 };

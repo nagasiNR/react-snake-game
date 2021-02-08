@@ -55,20 +55,20 @@ export const App = () => {
             case Direction.Top: {
                 head = {
                     x: snake.head.x,
-                    y: snake.head.y - 2
+                    y: snake.head.y - 4
                 };
                 break;
             }
             case Direction.Left: {
                 head = {
-                    x: snake.head.x - 2,
+                    x: snake.head.x - 4,
                     y: snake.head.y
                 };
                 break;
             }
             case Direction.Right: {
                 head = {
-                    x: snake.head.x + 2,
+                    x: snake.head.x + 4,
                     y: snake.head.y
                 };
                 break;
@@ -76,7 +76,7 @@ export const App = () => {
             case Direction.Bottom: {
                 head = {
                     x: snake.head.x,
-                    y: snake.head.y + 2
+                    y: snake.head.y + 4
                 };
                 break;
             }
