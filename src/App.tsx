@@ -14,7 +14,7 @@ import './App.scss';
 
 export const App = () => {
     const [direction] = useGamePad(Direction.Right);
-    const { ticks } = useTicker(200);
+    const { ticks, tickDuration, updateTicker } = useTicker(200);
     const [integerGenerator] = useRandomInteger(1, 98);
     const [score, setScore] = useState(0);
 
@@ -33,8 +33,6 @@ export const App = () => {
         x: integerGenerator(),
         y: integerGenerator(),
     });
-
-    const [speed, setSpeed] = useState(200);
 
     useEffect(() => {
         if (isBorderHit()) {
@@ -124,8 +122,8 @@ export const App = () => {
     }
 
     function increaseSpeed() {
-        if (speed > 20) {
-            setSpeed(speed - 10);
+        if (tickDuration > 20) {
+            updateTicker(tickDuration - 10);
         }
     }
 

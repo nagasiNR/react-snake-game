@@ -1,40 +1,26 @@
 import { useState, useEffect } from 'react';
 
-export const useTicker = (tickInterval = 100) => {
+export const useTicker = (initialTickDuration: number) => {
+    const [tickDuration, setTickDuration] = useState<number>(initialTickDuration);
     const [ticks, setTicks] = useState<number>(0);
-    // let currentInterval: number;
-
 
     useEffect(() => {
         const interval = setInterval(() => {
             setTicks(ticks => ticks + 1);
-        }, tickInterval);
-        return () => clearInterval(interval);
-    }, [tickInterval]);
+        }, tickDuration);
 
-    // useEffect(() => {
-    //     function setTickerInterval(interval: number) {
-    //         currentInterval = window.setInterval(() => {
-    //             setTicks(ticks + 1);
-    //         }, interval);
-    //     }
+        return () => {
+            clearInterval(interval)
+        };
+    }, [tickDuration]);
 
-    //     setTickerInterval(tickInterval);
-    // }, [tickInterval]);
-
-    // function setTickerInterval(tickInterval: number) {
-    //     currentInterval = window.setInterval(() => {
-    //         setTicks(ticks + 1);
-    //     }, tickInterval);
-    // }
-
-    // function updateTickerInterval(tickInterval: number) {
-    //     clearInterval(currentInterval);
-    //     setTickerInterval(tickInterval);
-    // }
+    function updateTicker(tickDuration: number) {
+        setTickDuration(tickDuration)
+    }
 
     return {
+        tickDuration,
         ticks,
-        // updateTickerInterval
+        updateTicker
     }
 }
