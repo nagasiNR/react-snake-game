@@ -37,8 +37,6 @@ export const App = () => {
     const [speed, setSpeed] = useState(200);
 
     useEffect(() => {
-        console.log('check conditions');
-
         if (isBorderHit()) {
             return gameOver();
         }
@@ -54,8 +52,6 @@ export const App = () => {
     }, [snake])
 
     useEffect(() => {
-        console.log('ticks changed');
-
         moveSnake();
     }, [ticks])
 

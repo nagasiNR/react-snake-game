@@ -12,24 +12,33 @@ export const useGamePad = (initialDirection: Direction) => {
 
     useEffect(() => {
         document.onkeydown = keyDownHandler;
-    }, []);
+    }, [direction]);
 
     function keyDownHandler(event: KeyboardEvent) {
         switch (event.key) {
             case 'ArrowUp': {
-                setDirection(Direction.Top);
+                if (direction !== Direction.Bottom) {
+                    setDirection(Direction.Top);
+                }
+
                 break;
             }
             case 'ArrowLeft': {
-                setDirection(Direction.Left);
+                if (direction !== Direction.Right) {
+                    setDirection(Direction.Left);
+                }
                 break;
             }
             case 'ArrowRight': {
-                setDirection(Direction.Right);
+                if (direction !== Direction.Left) {
+                    setDirection(Direction.Right);
+                }
                 break;
             }
             case 'ArrowDown': {
-                setDirection(Direction.Bottom);
+                if (direction !== Direction.Top) {
+                    setDirection(Direction.Bottom);
+                }
                 break;
             }
         }
