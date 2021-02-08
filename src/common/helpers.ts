@@ -1,4 +1,17 @@
-import { IFood } from './interfaces';
+import { ISnake } from '../Snake';
+import { IFood } from '../Food';
+
+export const getDefaultSnake = (): ISnake => {
+    const head = { x: 2, y: 0 };
+
+    return {
+        head,
+        segments: [
+            { x: 0, y: 0 },
+            head
+        ]
+    }
+}
 
 export const generateFood = (): IFood => ({
     x: getRandomInteger(1, 98),

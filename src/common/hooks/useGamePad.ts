@@ -44,5 +44,8 @@ export const useGamePad = (initialDirection: Direction) => {
         }
     }
 
-    return [direction];
+    return {
+        direction,
+        setDirection,
+    };
 }

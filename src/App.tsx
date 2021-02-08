@@ -2,30 +2,27 @@ import { useState, useEffect } from 'react';
 
 import { Playground } from './Playground';
 import { Snake, ISnake, ISnakeSegment } from './Snake';
-import { Food, IFood, generateFood } from './Food';
+import { Food, IFood } from './Food';
 import { GameResults } from './GameResults';
 import {
     useGamePad,
     useTicker,
     Direction,
 } from './common/hooks';
+import {
+    getDefaultSnake,
+    generateFood
+} from './common/helpers';
 import './App.scss';
 
 export const App = () => {
-    const [direction] = useGamePad(Direction.Right);
+    const { direction, setDirection } = useGamePad(Direction.Right);
     const { ticks, tickDuration, updateTicker } = useTicker(200);
     const [score, setScore] = useState(0);
 
-    const [snake, setSnake] = useState<ISnake>((() => {
-        const head = { x: 2, y: 0 };
-        return {
-            head,
-            segments: [
-                { x: 0, y: 0 },
-                head
-            ]
-        }
-    }));
+    const [snake, setSnake] = useState<ISnake>(
+        getDefaultSnake()
+    );
 
     const [food, setFood] = useState<IFood>(
         generateFood()
@@ -158,7 +155,16 @@ export const App = () => {
     }
 
     function gameOver() {
-        // alert('GAME OVER!!!');
+        alert(`GAME OVER! Your score ${score}`);
+        resetGame();
+    }
+
+    function resetGame() {
+        setDirection(Direction.Right);
+        updateTicker(200);
+        setScore(0);
+        generateOneMoreFood();
+        setSnake(getDefaultSnake());
     }
 
     return (
