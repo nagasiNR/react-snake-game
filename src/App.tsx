@@ -2,20 +2,18 @@ import { useState, useEffect } from 'react';
 
 import { Playground } from './Playground';
 import { Snake, ISnake, ISnakeSegment } from './Snake';
-import { Food } from './Food';
+import { Food, IFood, generateFood } from './Food';
 import { GameResults } from './GameResults';
 import {
-    useRandomInteger,
     useGamePad,
+    useTicker,
     Direction,
-    useTicker
 } from './common/hooks';
 import './App.scss';
 
 export const App = () => {
     const [direction] = useGamePad(Direction.Right);
     const { ticks, tickDuration, updateTicker } = useTicker(200);
-    const [integerGenerator] = useRandomInteger(1, 98);
     const [score, setScore] = useState(0);
 
     const [snake, setSnake] = useState<ISnake>((() => {
@@ -29,10 +27,9 @@ export const App = () => {
         }
     }));
 
-    const [food, setFood] = useState<{ x: number, y: number }>({
-        x: integerGenerator(),
-        y: integerGenerator(),
-    });
+    const [food, setFood] = useState<IFood>(
+        generateFood()
+    );
 
     useEffect(() => {
         if (isBorderHit()) {
@@ -115,10 +112,9 @@ export const App = () => {
     }
 
     function generateOneMoreFood() {
-        setFood({
-            x: integerGenerator(),
-            y: integerGenerator(),
-        })
+        setFood(
+            generateFood()
+        )
     }
 
     function increaseSpeed() {
